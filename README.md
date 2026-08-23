@@ -36,6 +36,15 @@ pnpm build
 pnpm package:win
 ```
 
+`package:win` reuses the locally installed Electron distribution and pins electron-builder's internal `@electron/get` to the compatible 5.1.0 API. This avoids a packaging-tool dependency mismatch while retaining the audited official package.
+
+After installing the NSIS artifact, smoke-test the installed executable with:
+
+```powershell
+$env:INSPECTOR_EXE = 'C:\path\to\Amazon 3D Asset Inspector.exe'
+pnpm test:installed
+```
+
 ## Evidence boundary
 
 - `AMZ-VIYR-SCENE-001` is labeled `amazon-validator-observed`, based on supplied Amazon feedback and a user-confirmed accepted repair.

@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "description": "Local GLB validation and safe repair for Amazon 3D and VIYR workflows.",
+  "author": "Local Tools",
   "main": "out/main/index.js",
   "scripts": {
     "dev": "electron-vite dev",
@@ -15,6 +16,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "pnpm build && playwright test",
+    "test:installed": "playwright test tests/e2e/installed.spec.ts",
     "package:win": "pnpm build && electron-builder --win nsis --x64"
   },
   "dependencies": {
@@ -49,6 +51,7 @@
   "build": {
     "appId": "com.localtools.amazon3dassetinspector",
     "productName": "Amazon 3D Asset Inspector",
+    "electronDist": "node_modules/electron/dist",
     "asar": true,
     "directories": {
       "output": "release"
