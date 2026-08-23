@@ -9,3 +9,5 @@ playwright-report/
 .DS_Store
 tests/fixtures/private/*
 !tests/fixtures/private/.gitkeep
+!tests/fixtures/private/README.md
+!tests/fixtures/private/sha256.json
