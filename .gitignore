@@ -5,6 +5,7 @@ coverage/
 test-results/
 playwright-report/
 *.log
+*.tsbuildinfo
 .DS_Store
 tests/fixtures/private/*
 !tests/fixtures/private/.gitkeep

@@ -1,0 +1,43 @@
+import type { AmazonRuleDefinition } from '@shared/types'
+
+export const amazonRules = [
+  {
+    id: 'AMZ-VIYR-SCENE-001',
+    name: 'Default scene is not explicitly defined',
+    category: 'scene',
+    appliesTo: ['viyr'],
+    severity: 'error',
+    description: 'Amazon VIYR validator feedback requires a scene indexed at 0.',
+    source: 'amazon-validator-observed',
+    lastVerified: '2026-08-23',
+    confidence: 'confirmed-observed',
+    autoFixable: true,
+    fixType: 'safe',
+  },
+  {
+    id: 'AMZ-VIYR-SCENE-002',
+    name: 'Default scene is not scene 0',
+    category: 'scene',
+    appliesTo: ['viyr'],
+    severity: 'error',
+    description: 'Changing an existing default scene may change the visible asset and is not safe.',
+    source: 'amazon-validator-observed',
+    lastVerified: '2026-08-23',
+    confidence: 'confirmed-observed',
+    autoFixable: false,
+    fixType: 'manual',
+  },
+  {
+    id: 'AMZ-VIYR-SCENE-003',
+    name: 'No scene definition found',
+    category: 'scene',
+    appliesTo: ['viyr'],
+    severity: 'error',
+    description: 'Creating a scene changes scene structure and requires explicit user review.',
+    source: 'diagnostic',
+    lastVerified: '2026-08-23',
+    confidence: 'unverified',
+    autoFixable: false,
+    fixType: 'advanced',
+  },
+] as const satisfies readonly AmazonRuleDefinition[]
