@@ -1,0 +1,10 @@
+node_modules/
+out/
+release/
+coverage/
+test-results/
+playwright-report/
+*.log
+.DS_Store
+tests/fixtures/private/*
+!tests/fixtures/private/.gitkeep
