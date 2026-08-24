@@ -18,6 +18,7 @@ import {
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { metresToUnit } from '@core/units/convert'
+import { summarizeSceneTextures, type TextureLoadSummary } from '@core/geometry/modelTextures'
 import type { ModelAnalysis, Unit, WorldBounds } from '@shared/analysis'
 import type { DisplaySettings } from '../store/inspectorStore'
 import { disposeScene, loadSceneFromGlb } from './modelLoader'
@@ -34,8 +35,10 @@ interface ModelViewportProps {
   bounds: WorldBounds | null
   unit: Unit
   display: DisplaySettings
+  textureSummary: TextureLoadSummary | null
   viewRequest: ViewRequest
   onBounds(bounds: WorldBounds): void
+  onTextures(summary: TextureLoadSummary): void
   onLoadError(message: string): void
   onView(kind: ViewKind): void
 }
@@ -101,11 +104,13 @@ function LoadedModel({
   wireframe,
   onBounds,
   onError,
+  onTextures,
 }: {
   bytes: Uint8Array
   wireframe: boolean
   onBounds(bounds: WorldBounds): void
   onError(message: string): void
+  onTextures(summary: TextureLoadSummary): void
 }) {
   const [scene, setScene] = useState<Object3D | null>(null)
 
@@ -130,6 +135,7 @@ function LoadedModel({
           size: { x: size.x, y: size.y, z: size.z },
           center: { x: center.x, y: center.y, z: center.z },
         })
+        onTextures(summarizeSceneTextures(nextScene))
         setScene(nextScene)
       })
       .catch((error) => {
@@ -139,7 +145,7 @@ function LoadedModel({
       active = false
       if (loaded) disposeScene(loaded)
     }
-  }, [bytes, onBounds, onError])
+  }, [bytes, onBounds, onError, onTextures])
 
   useEffect(() => {
     if (scene) applyWireframe(scene, wireframe)
@@ -250,7 +256,19 @@ function formatFileSize(bytes: number): string {
 }
 
 export function ModelViewport(props: ModelViewportProps) {
-  const { bytes, analysis, bounds, unit, display, viewRequest, onBounds, onLoadError, onView } = props
+  const {
+    bytes,
+    analysis,
+    bounds,
+    unit,
+    display,
+    textureSummary,
+    viewRequest,
+    onBounds,
+    onTextures,
+    onLoadError,
+    onView,
+  } = props
   return (
     <section className="viewport-shell" aria-label="3D viewport">
       <div className="measure-corner measure-corner--tl" />
@@ -264,7 +282,13 @@ export function ModelViewport(props: ModelViewportProps) {
         <directionalLight position={[4, 7, 5]} intensity={2.4} />
         <directionalLight position={[-4, 2, -3]} intensity={0.8} />
         {bytes && (
-          <LoadedModel bytes={bytes} wireframe={display.wireframe} onBounds={onBounds} onError={onLoadError} />
+          <LoadedModel
+            bytes={bytes}
+            wireframe={display.wireframe}
+            onBounds={onBounds}
+            onTextures={onTextures}
+            onError={onLoadError}
+          />
         )}
         <SceneHelpers bounds={bounds} display={display} unit={unit} />
         <CameraControls bounds={bounds} request={viewRequest} />
@@ -284,6 +308,15 @@ export function ModelViewport(props: ModelViewportProps) {
           <span>GLB {analysis.file.glbVersion}.0</span>
           <span>{formatFileSize(analysis.file.size)}</span>
           <span>{analysis.stats.triangleCount.toLocaleString()} Triangles</span>
+          {textureSummary && (
+            <span data-testid="texture-status">
+              {textureSummary.uniqueTextures === 0
+                ? '未检测到贴图'
+                : textureSummary.readyTextures === textureSummary.uniqueTextures
+                  ? `贴图已就绪：${textureSummary.readyTextures} 张`
+                  : `贴图未完全加载：${textureSummary.readyTextures}/${textureSummary.uniqueTextures} 张`}
+            </span>
+          )}
         </div>
       )}
 

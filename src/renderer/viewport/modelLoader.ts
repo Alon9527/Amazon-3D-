@@ -1,16 +1,28 @@
-import { Material, Object3D } from 'three'
+import { LoadingManager, Material, Object3D } from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { computeWorldBounds } from '@core/geometry/worldBounds'
+import { sceneTextures } from '@core/geometry/modelTextures'
 import type { WorldBounds } from '@shared/analysis'
 
 export function loadSceneFromGlb(bytes: Uint8Array): Promise<Object3D> {
   const buffer = bytes.slice().buffer
   return new Promise((resolve, reject) => {
-    new GLTFLoader().parse(
+    const manager = new LoadingManager()
+    let failedResource: string | null = null
+    manager.onError = (url) => {
+      failedResource = url
+    }
+    new GLTFLoader(manager).parse(
       buffer,
       '',
       (gltf) => resolve(gltf.scene),
-      (error) => reject(error instanceof Error ? error : new Error(String(error))),
+      (error) => {
+        if (failedResource?.startsWith('blob:')) {
+          reject(new Error('贴图加载失败：无法解码 GLB 中的内嵌图片'))
+          return
+        }
+        reject(error instanceof Error ? error : new Error(String(error)))
+      },
     )
   })
 }
@@ -34,6 +46,7 @@ export function boundsEqual(left: WorldBounds, right: WorldBounds, epsilon = 1e-
 }
 
 export function disposeScene(object: Object3D): void {
+  const textures = new Map(sceneTextures(object).map((texture) => [texture.uuid, texture]))
   object.traverse((child) => {
     const renderable = child as Object3D & {
       geometry?: { dispose(): void }
@@ -43,4 +56,5 @@ export function disposeScene(object: Object3D): void {
     const materials = Array.isArray(renderable.material) ? renderable.material : [renderable.material]
     for (const material of materials) material?.dispose()
   })
+  for (const texture of textures.values()) texture.dispose()
 }

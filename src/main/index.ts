@@ -94,7 +94,9 @@ function registerIpc(): void {
 function installContentSecurityPolicy(): void {
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     const scriptPolicy = isDevelopment ? "script-src 'self' 'unsafe-eval'" : "script-src 'self'"
-    const connectPolicy = isDevelopment ? "connect-src 'self' ws: http:" : "connect-src 'self'"
+    const connectPolicy = isDevelopment
+      ? "connect-src 'self' blob: ws: http:"
+      : "connect-src 'self' blob:"
     callback({
       responseHeaders: {
         ...details.responseHeaders,

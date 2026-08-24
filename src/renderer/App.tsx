@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { metresToUnit, unitToMetres } from '@core/units/convert'
+import type { TextureLoadSummary } from '@core/geometry/modelTextures'
 import type { Unit, WorldBounds } from '@shared/analysis'
 import type { AssetPayload } from '@shared/bridge'
 import type { ValidationSeverity } from '@shared/types'
@@ -36,10 +37,12 @@ export function App() {
   } = state
   const [viewRequest, setViewRequest] = useState({ kind: 'fit' as ViewKind, token: 0 })
   const [dragActive, setDragActive] = useState(false)
+  const [textureSummary, setTextureSummary] = useState<TextureLoadSummary | null>(null)
 
   const loadAsset = useCallback(
     async (payload: AssetPayload) => {
       const asset = normalizeAsset(payload)
+      setTextureSummary(null)
       setSession(asset)
       try {
         const analysis = await analyzeInWorker(asset.bytes, asset.name)
@@ -215,8 +218,10 @@ export function App() {
             bounds={state.bounds}
             unit={state.unit}
             display={state.display}
+            textureSummary={textureSummary}
             viewRequest={viewRequest}
             onBounds={handleBounds}
+            onTextures={setTextureSummary}
             onLoadError={handleViewerError}
             onView={handleView}
           />

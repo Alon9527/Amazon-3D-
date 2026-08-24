@@ -60,7 +60,9 @@ test('loads an embedded GLB texture without a CSP violation', async ({}, testInf
   try {
     const window = await app.firstWindow()
     const runtimeErrors: string[] = []
+    const runtimeMessages: string[] = []
     window.on('console', (message) => {
+      runtimeMessages.push(message.text())
       if (message.type() === 'error') runtimeErrors.push(message.text())
     })
     window.on('pageerror', (error) => runtimeErrors.push(error.message))
@@ -69,9 +71,14 @@ test('loads an embedded GLB texture without a CSP violation', async ({}, testInf
     await expect(window.getByRole('heading', { name: 'textured.glb' })).toBeVisible()
     await window.waitForTimeout(500)
     expect(
-      runtimeErrors.filter((message) => message.includes('Content Security Policy')),
+      runtimeErrors.filter(
+        (message) => message.includes('Content Security Policy') || message.includes("Couldn't load texture"),
+      ),
       runtimeErrors.join('\n'),
     ).toEqual([])
+    await expect(window.getByTestId('texture-status'), runtimeMessages.join('\n')).toHaveText('贴图已就绪：1 张')
+    await window.getByRole('button', { name: 'Wireframe' }).click()
+    await window.getByRole('button', { name: 'Wireframe' }).click()
     await expect(window.getByTestId('texture-status')).toHaveText('贴图已就绪：1 张')
   } finally {
     await app.close()
