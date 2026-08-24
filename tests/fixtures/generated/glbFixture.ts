@@ -91,3 +91,72 @@ export function createTriangleGlbFixture(options: { sceneDefined: boolean }): Ui
   if (options.sceneDefined) json.scene = 0
   return createGlbFixture(json, bin)
 }
+
+export function createTexturedTriangleGlbFixture(): Uint8Array {
+  const positions = new Float32Array([0, 0, 0, 1, 0, 0, 0, 1, 0])
+  const textureCoordinates = new Float32Array([0, 0, 1, 0, 0, 1])
+  const indices = new Uint16Array([0, 1, 2])
+  const png = Uint8Array.from(
+    Buffer.from(
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZbWQAAAAASUVORK5CYII=',
+      'base64',
+    ),
+  )
+  const imageOffset = 68
+  const bin = new Uint8Array(imageOffset + png.byteLength)
+  bin.set(new Uint8Array(positions.buffer), 0)
+  bin.set(new Uint8Array(textureCoordinates.buffer), 36)
+  bin.set(new Uint8Array(indices.buffer), 60)
+  bin.set(png, imageOffset)
+
+  return createGlbFixture(
+    {
+      asset: { version: '2.0', generator: 'Inspector textured fixture' },
+      scene: 0,
+      scenes: [{ nodes: [0] }],
+      nodes: [{ mesh: 0 }],
+      meshes: [
+        {
+          primitives: [
+            {
+              attributes: { POSITION: 0, TEXCOORD_0: 1 },
+              indices: 2,
+              material: 0,
+            },
+          ],
+        },
+      ],
+      accessors: [
+        {
+          bufferView: 0,
+          componentType: 5126,
+          count: 3,
+          type: 'VEC3',
+          min: [0, 0, 0],
+          max: [1, 1, 0],
+        },
+        { bufferView: 1, componentType: 5126, count: 3, type: 'VEC2' },
+        { bufferView: 2, componentType: 5123, count: 3, type: 'SCALAR' },
+      ],
+      bufferViews: [
+        { buffer: 0, byteOffset: 0, byteLength: 36, target: 34962 },
+        { buffer: 0, byteOffset: 36, byteLength: 24, target: 34962 },
+        { buffer: 0, byteOffset: 60, byteLength: 6, target: 34963 },
+        { buffer: 0, byteOffset: imageOffset, byteLength: png.byteLength },
+      ],
+      buffers: [{ byteLength: bin.byteLength }],
+      images: [{ bufferView: 3, mimeType: 'image/png' }],
+      textures: [{ source: 0 }],
+      materials: [
+        {
+          pbrMetallicRoughness: {
+            baseColorTexture: { index: 0 },
+            metallicFactor: 0,
+            roughnessFactor: 1,
+          },
+        },
+      ],
+    },
+    bin,
+  )
+}
