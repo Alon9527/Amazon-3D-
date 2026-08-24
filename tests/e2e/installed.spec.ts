@@ -1,7 +1,7 @@
 import { access, mkdir, writeFile } from 'node:fs/promises'
 import { dirname } from 'node:path'
 import { _electron as electron, expect, test } from '@playwright/test'
-import { createTriangleGlbFixture } from '../fixtures/generated/glbFixture'
+import { createTexturedTriangleGlbFixture } from '../fixtures/generated/glbFixture'
 
 const installedExecutable = process.env.INSPECTOR_EXE
 
@@ -12,7 +12,7 @@ test('installed Windows application opens and analyzes a GLB', async ({}, testIn
 
   const sourcePath = testInfo.outputPath('installed-smoke.glb')
   await mkdir(dirname(sourcePath), { recursive: true })
-  await writeFile(sourcePath, createTriangleGlbFixture({ sceneDefined: false }))
+  await writeFile(sourcePath, createTexturedTriangleGlbFixture())
 
   const app = await electron.launch({
     executablePath: installedExecutable,
@@ -21,9 +21,10 @@ test('installed Windows application opens and analyzes a GLB', async ({}, testIn
 
   try {
     const window = await app.firstWindow()
-    await expect(window.getByTestId('app-title')).toHaveText('Amazon 3D Asset Inspector')
+    await expect(window.getByTestId('app-title')).toHaveText('Amazon 3D 资产检查器')
     await expect(window.getByRole('heading', { name: 'installed-smoke.glb' })).toBeVisible()
-    await expect(window.getByText('AMZ-VIYR-SCENE-001', { exact: true })).toBeVisible()
+    await expect(window.getByRole('button', { name: '打开 GLB' })).toBeVisible()
+    await expect(window.getByTestId('texture-status')).toHaveText('贴图已就绪：1 张')
   } finally {
     await app.close()
   }

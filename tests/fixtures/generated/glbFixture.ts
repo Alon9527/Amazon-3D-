@@ -98,7 +98,7 @@ export function createTexturedTriangleGlbFixture(): Uint8Array {
   const indices = new Uint16Array([0, 1, 2])
   const png = Uint8Array.from(
     Buffer.from(
-      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
+      'iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFklEQVR4nGP4z8DwHwwZGP7//w9kAABHygj4/BTyWgAAAABJRU5ErkJggg==',
       'base64',
     ),
   )

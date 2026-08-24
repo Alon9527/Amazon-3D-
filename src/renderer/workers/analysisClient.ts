@@ -18,7 +18,7 @@ worker.onmessage = (event: MessageEvent<AnalysisWorkerResponse>) => {
 }
 
 worker.onerror = (event) => {
-  const error = new Error(event.message || 'Analysis worker failed')
+  const error = new Error(event.message || '分析 Worker 运行失败')
   for (const request of pending.values()) request.reject(error)
   pending.clear()
 }

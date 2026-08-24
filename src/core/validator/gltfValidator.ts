@@ -20,14 +20,6 @@ function severity(value: unknown): ValidationSeverity {
   return 'info'
 }
 
-function titleFromCode(code: string): string {
-  return code
-    .toLowerCase()
-    .split('_')
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ')
-}
-
 export function normalizeValidatorReport(
   report: unknown,
   validatorVersion: string,
@@ -42,9 +34,9 @@ export function normalizeValidatorReport(
       id: `GLTF-${code}`,
       category: 'gltf',
       severity: severity(message.severity),
-      title: titleFromCode(code),
+      title: `glTF 标准问题：${code}`,
       description:
-        typeof message.message === 'string' ? message.message : 'The glTF Validator reported an issue.',
+        typeof message.message === 'string' ? message.message : 'glTF Validator 报告了一个问题。',
       ...(pointer ? { actual: pointer } : {}),
       source: 'gltf-standard',
       autoFixable: false,

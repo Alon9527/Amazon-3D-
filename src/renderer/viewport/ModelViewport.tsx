@@ -126,7 +126,7 @@ function LoadedModel({
         }
         nextScene.updateMatrixWorld(true)
         const box = new Box3().setFromObject(nextScene, true)
-        if (box.isEmpty()) throw new Error('Model has no renderable geometry')
+        if (box.isEmpty()) throw new Error('模型中没有可渲染的几何体')
         const size = box.getSize(new Vector3())
         const center = box.getCenter(new Vector3())
         onBounds({
@@ -159,7 +159,7 @@ function makeLabel(text: string, color: string, position: Vector3, scale: number
   canvas.width = 512
   canvas.height = 128
   const context = canvas.getContext('2d')
-  if (!context) throw new Error('Canvas 2D context is unavailable')
+  if (!context) throw new Error('无法创建 Canvas 2D 上下文')
   context.clearRect(0, 0, canvas.width, canvas.height)
   context.fillStyle = 'rgba(13,15,16,0.84)'
   context.fillRect(4, 12, 504, 104)
@@ -270,7 +270,7 @@ export function ModelViewport(props: ModelViewportProps) {
     onView,
   } = props
   return (
-    <section className="viewport-shell" aria-label="3D viewport">
+    <section className="viewport-shell" aria-label="3D 工作区">
       <div className="measure-corner measure-corner--tl" />
       <div className="measure-corner measure-corner--tr" />
       <div className="measure-corner measure-corner--bl" />
@@ -307,7 +307,7 @@ export function ModelViewport(props: ModelViewportProps) {
           <strong>{analysis.file.name}</strong>
           <span>GLB {analysis.file.glbVersion}.0</span>
           <span>{formatFileSize(analysis.file.size)}</span>
-          <span>{analysis.stats.triangleCount.toLocaleString()} Triangles</span>
+          <span>{analysis.stats.triangleCount.toLocaleString()} 个三角面</span>
           {textureSummary && (
             <span data-testid="texture-status">
               {textureSummary.uniqueTextures === 0
@@ -320,10 +320,10 @@ export function ModelViewport(props: ModelViewportProps) {
         </div>
       )}
 
-      <div className="orientation-gizmo" aria-label="Orientation gizmo">
-        <button className="axis-x" onClick={() => onView('right')} title="Right view">X</button>
-        <button className="axis-y" onClick={() => onView('top')} title="Top view">Y</button>
-        <button className="axis-z" onClick={() => onView('front')} title="Front view">Z</button>
+      <div className="orientation-gizmo" aria-label="方向控制器">
+        <button className="axis-x" onClick={() => onView('right')} title="右视图">X</button>
+        <button className="axis-y" onClick={() => onView('top')} title="顶视图">Y</button>
+        <button className="axis-z" onClick={() => onView('front')} title="正视图">Z</button>
       </div>
 
       {bounds && (
@@ -331,7 +331,7 @@ export function ModelViewport(props: ModelViewportProps) {
           <span className="axis-x">X {metresToUnit(bounds.size.x, unit).toFixed(2)}</span>
           <span className="axis-y">Y {metresToUnit(bounds.size.y, unit).toFixed(2)}</span>
           <span className="axis-z">Z {metresToUnit(bounds.size.z, unit).toFixed(2)}</span>
-          <small>{unit === 'inch' ? 'decimal inches' : unit}</small>
+          <small>{unit === 'inch' ? '十进制英寸' : unit}</small>
         </div>
       )}
     </section>

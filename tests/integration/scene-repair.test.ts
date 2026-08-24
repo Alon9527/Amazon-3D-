@@ -63,7 +63,7 @@ describe('Amazon scene validation and Safe Fix', () => {
       expect.objectContaining({ id: 'AMZ-VIYR-SCENE-002', autoFixable: false }),
     )
     expect(() => repairMissingDefaultScene(source)).toThrowError(
-      'Safe Fix requires a missing scene and an existing valid scenes[0]',
+      '安全修复要求顶层 scene 缺失且存在有效的 scenes[0]',
     )
   })
 
@@ -79,7 +79,7 @@ describe('Amazon scene validation and Safe Fix', () => {
 
     expect(issue).toMatchObject({ severity: 'error', autoFixable: false, actual: [0, 3] })
     expect(() => repairMissingDefaultScene(source)).toThrowError(
-      'Safe Fix requires a missing scene and an existing valid scenes[0]',
+      '安全修复要求顶层 scene 缺失且存在有效的 scenes[0]',
     )
   })
 
@@ -96,7 +96,7 @@ describe('Amazon scene validation and Safe Fix', () => {
       expect.objectContaining({ id: 'GLTF-SCENE-ROOT-001', actual: [1], autoFixable: false }),
     )
     expect(() => repairMissingDefaultScene(source)).toThrowError(
-      'Safe Fix requires scene 0 to reference root nodes only',
+      '安全修复要求 scene 0 只能引用根节点',
     )
   })
 })

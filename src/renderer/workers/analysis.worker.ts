@@ -20,7 +20,7 @@ self.onmessage = async (event: MessageEvent<AnalysisWorkerRequest>) => {
     const response: AnalysisWorkerResponse = {
       id: request.id,
       ok: false,
-      error: error instanceof Error ? error.message : 'Unknown analysis worker error',
+      error: error instanceof Error ? error.message : '分析 Worker 出现未知错误',
     }
     self.postMessage(response)
   }

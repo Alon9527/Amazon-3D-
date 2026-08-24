@@ -48,7 +48,7 @@ export function App() {
         const analysis = await analyzeInWorker(asset.bytes, asset.name)
         setAnalysis(analysis)
       } catch (error) {
-        setError(error instanceof Error ? error.message : 'GLB analysis failed')
+        setError(error instanceof Error ? error.message : 'GLB 分析失败')
       }
     },
     [setAnalysis, setError, setSession],
@@ -65,7 +65,7 @@ export function App() {
       const asset = await window.inspector.openGlb()
       if (asset) await loadAsset(asset)
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Open GLB failed')
+      setError(error instanceof Error ? error.message : '打开 GLB 失败')
     }
   }, [loadAsset, setError])
 
@@ -75,7 +75,7 @@ export function App() {
       setDragActive(false)
       const files = [...event.dataTransfer.files]
       if (files.length !== 1 || !files[0]?.name.toLowerCase().endsWith('.glb')) {
-        setError('Drop exactly one .glb file. Multi-file glTF is outside this MVP.')
+        setError('请只拖入一个 .glb 文件；多文件 glTF 不在当前 MVP 支持范围内。')
         return
       }
       const file = files[0]
@@ -86,7 +86,7 @@ export function App() {
           bytes: new Uint8Array(await file.arrayBuffer()),
         })
       } catch (error) {
-        setError(error instanceof Error ? error.message : 'Dropped GLB could not be read')
+        setError(error instanceof Error ? error.message : '无法读取拖入的 GLB')
       }
     },
     [loadAsset, setError],
@@ -100,7 +100,7 @@ export function App() {
   )
 
   const handleViewerError = useCallback(
-    (message: string) => setError(`3D preview failed: ${message}`),
+    (message: string) => setError(`3D 预览失败：${message}`),
     [setError],
   )
 
@@ -117,12 +117,12 @@ export function App() {
       const fixedBounds = await loadWorldBounds(repair.fixedBytes)
       const boundsIdentical = boundsEqual(state.bounds, fixedBounds)
       if (!repair.checks.coreChecksPassed || !boundsIdentical) {
-        throw new Error('Repair candidate failed before/after consistency checks')
+        throw new Error('修复候选未通过修复前后的一致性检查')
       }
       state.setRepair({ ...repair, boundsIdentical })
       state.setNotice('修复候选已通过核心检查')
     } catch (error) {
-      state.setError(error instanceof Error ? error.message : 'Safe Fix failed')
+      state.setError(error instanceof Error ? error.message : '安全修复失败')
     }
   }, [state])
 
@@ -134,9 +134,9 @@ export function App() {
         suggestedName: state.repair.after.file.name,
         bytes: state.repair.fixedBytes,
       })
-      if (result.status === 'saved') state.setNotice('Export Successful')
+      if (result.status === 'saved') state.setNotice('导出成功')
     } catch (error) {
-      state.setError(error instanceof Error ? error.message : 'Export failed')
+      state.setError(error instanceof Error ? error.message : '导出失败')
     }
   }, [state])
 
@@ -171,11 +171,11 @@ export function App() {
   const busy = state.phase === 'loading' || state.phase === 'repairing'
 
   const statusText = useMemo(() => {
-    if (state.phase === 'loading') return 'ANALYZING LOCAL ASSET'
-    if (state.phase === 'repairing') return 'BUILDING AND REVALIDATING CANDIDATE'
-    if (state.error) return 'ACTION REQUIRED'
-    if (state.analysis) return 'ANALYSIS COMPLETE'
-    return 'READY FOR LOCAL GLB'
+    if (state.phase === 'loading') return '正在分析本地资产'
+    if (state.phase === 'repairing') return '正在生成并复检修复候选'
+    if (state.error) return '需要处理'
+    if (state.analysis) return '分析完成'
+    return '可以打开本地 GLB'
   }, [state.analysis, state.error, state.phase])
 
   return (
@@ -250,18 +250,18 @@ export function App() {
           </div>
         )}
         <span className="statusbar-spacer" />
-        <span>LOCAL PROCESSING</span>
+        <span>仅在本机处理</span>
       </footer>
 
       {(state.notice || state.error) && (
         <div className={`toast ${state.error ? 'toast--error' : ''}`} role="status">
-          <strong>{state.error ? 'Operation blocked' : state.notice}</strong>
-          <span>{state.error ?? (state.notice === 'Export Successful' ? 'Saved bytes match the validated candidate.' : 'Geometry, BIN and validation gates passed.')}</span>
-          <button onClick={() => { state.setNotice(null); state.setError(null) }} aria-label="Dismiss message">×</button>
+          <strong>{state.error ? '操作已阻止' : state.notice}</strong>
+          <span>{state.error ?? (state.notice === '导出成功' ? '保存的字节与已验证候选完全一致。' : '几何、BIN 与验证门禁均已通过。')}</span>
+          <button onClick={() => { state.setNotice(null); state.setError(null) }} aria-label="关闭消息">×</button>
         </div>
       )}
 
-      {dragActive && <div className="drop-overlay"><strong>DROP GLB TO INSPECT</strong><span>Single-file GLB 2.0 only</span></div>}
+      {dragActive && <div className="drop-overlay"><strong>拖入 GLB 开始检查</strong><span>仅支持单文件 GLB 2.0</span></div>}
     </div>
   )
 }

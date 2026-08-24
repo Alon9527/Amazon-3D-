@@ -10,14 +10,14 @@ const isDevelopment = Boolean(process.env.ELECTRON_RENDERER_URL)
 
 function assertGlbPath(filePath: string): void {
   if (extname(filePath).toLowerCase() !== '.glb') {
-    throw new Error('Only single-file GLB assets are supported in this MVP')
+    throw new Error('当前 MVP 仅支持单文件 GLB 资产')
   }
 }
 
 async function readAsset(filePath: string): Promise<AssetPayload> {
   assertGlbPath(filePath)
   const details = await stat(filePath)
-  if (!details.isFile()) throw new Error('Selected GLB path is not a file')
+  if (!details.isFile()) throw new Error('选择的 GLB 路径不是文件')
   const bytes = await readFile(filePath)
   return {
     name: basename(filePath),
@@ -45,7 +45,7 @@ function samePath(left: string, right: string): boolean {
 function registerIpc(): void {
   ipcMain.handle('inspector:open-glb', async (): Promise<AssetPayload | null> => {
     const result = await dialog.showOpenDialog({
-      title: 'Open GLB',
+      title: '打开 GLB',
       properties: ['openFile'],
       filters: [{ name: 'GLB 2.0', extensions: ['glb'] }],
     })
@@ -62,13 +62,13 @@ function registerIpc(): void {
     'inspector:save-fixed',
     async (event, request: SaveFixedRequest): Promise<SaveFixedResult> => {
       if (!request || !(request.bytes instanceof Uint8Array)) {
-        throw new Error('Invalid fixed GLB payload')
+        throw new Error('修复后的 GLB 数据无效')
       }
       const sourceDirectory = request.sourcePath ? dirname(request.sourcePath) : app.getPath('documents')
       const defaultPath = resolve(sourceDirectory, safeSuggestedName(request.suggestedName))
       const owner = BrowserWindow.fromWebContents(event.sender)
       const options: SaveDialogOptions = {
-        title: 'Export Fixed GLB',
+        title: '导出修复后的 GLB',
         defaultPath,
         filters: [{ name: 'GLB 2.0', extensions: ['glb'] }],
       }
@@ -78,13 +78,13 @@ function registerIpc(): void {
       if (result.canceled || !result.filePath) return { status: 'cancelled' }
       assertGlbPath(result.filePath)
       if (request.sourcePath && samePath(result.filePath, request.sourcePath)) {
-        throw new Error('The original GLB cannot be overwritten. Choose a new file name.')
+        throw new Error('不能覆盖原始 GLB，请选择新的文件名。')
       }
 
       await writeFile(result.filePath, request.bytes)
       const written = await readFile(result.filePath)
       if (!written.equals(Buffer.from(request.bytes))) {
-        throw new Error('Export verification failed: saved bytes do not match the validated candidate')
+        throw new Error('导出复检失败：保存的字节与已验证候选不一致')
       }
       return { status: 'saved', path: result.filePath, size: written.byteLength }
     },
@@ -115,7 +115,7 @@ async function createWindow(): Promise<void> {
     minWidth: 1180,
     minHeight: 720,
     backgroundColor: '#0d0f10',
-    title: 'Amazon 3D Asset Inspector',
+    title: 'Amazon 3D 资产检查器',
     show: false,
     webPreferences: {
       preload: resolve(currentDirectory, '../preload/index.cjs'),

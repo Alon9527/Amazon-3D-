@@ -4,7 +4,7 @@ import { App } from './App'
 import './styles.css'
 
 const root = document.getElementById('root')
-if (!root) throw new Error('Renderer root element is missing')
+if (!root) throw new Error('渲染器根节点不存在')
 
 createRoot(root).render(
   <StrictMode>
