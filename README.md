@@ -1,6 +1,6 @@
 # Amazon 3D Asset Inspector
 
-Windows desktop inspector for locally validating GLB 2.0 assets before Amazon 3D / View in Your Room submission. The MVP previews world-space dimensions, compares all six axis mappings, runs Khronos glTF Validator, and safely repairs an omitted top-level `scene: 0`.
+Windows desktop inspector for locally validating GLB 2.0 assets before Amazon 3D / View in Your Room submission. The Simplified Chinese MVP previews embedded PNG/JPEG textures and world-space dimensions, compares all six axis mappings, runs Khronos glTF Validator, and safely repairs an omitted top-level `scene: 0`.
 
 ## Supported MVP workflow
 
@@ -12,6 +12,8 @@ Windows desktop inspector for locally validating GLB 2.0 assets before Amazon 3D
 6. Export a newly named GLB after BIN/chunk hashes, geometry statistics, Bounding Box, and Validator checks pass.
 
 The original file is never overwritten. Multi-file `.gltf`, Advanced Fixes, batch mode, reports, texture thumbnails, and Seller Central automation are outside this MVP.
+
+Embedded PNG/JPEG images stored inside a GLB are decoded locally through restricted `blob:` URLs. External texture files and remote texture URLs are not supported. Application-owned controls, statuses, dialogs, and validation guidance are Simplified Chinese; Khronos Validator messages remain unchanged as original technical evidence and are labeled accordingly.
 
 ## Development
 
