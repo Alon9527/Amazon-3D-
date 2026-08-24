@@ -1,5 +1,9 @@
 # Amazon 3D Asset Inspector
 
+<p align="center">
+  <img src="build/icon-preview.png" alt="Amazon 3D Asset Inspector Logo" width="180">
+</p>
+
 Amazon 3D Asset Inspector 是一款面向 3D 设计师的 Windows 桌面检查工具，用于在向 Amazon 3D、View in 3D 或 View in Your Room 提交模型前，在本地预览、分析和修复 GLB 2.0 文件。
 
 软件界面采用简体中文，所有模型处理均在本机完成，不会上传模型或贴图。
