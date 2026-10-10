@@ -1,4 +1,4 @@
-import type { ModelAnalysis, VerifiedSceneRepair } from '@shared/analysis'
+import type { ModelAnalysis, VerifiedSceneRepair, VerifiedWarningCleanup } from '@shared/analysis'
 import type { AnalysisWorkerRequest, AnalysisWorkerResponse } from '@shared/bridge'
 
 const worker = new Worker(new URL('./analysis.worker.ts', import.meta.url), { type: 'module' })
@@ -38,4 +38,8 @@ export function analyzeInWorker(bytes: Uint8Array, fileName: string): Promise<Mo
 
 export function repairInWorker(bytes: Uint8Array, fileName: string): Promise<VerifiedSceneRepair> {
   return request({ type: 'repair', bytes: bytes.slice(), fileName })
+}
+
+export function cleanupInWorker(bytes: Uint8Array, fileName: string): Promise<VerifiedWarningCleanup> {
+  return request({ type: 'cleanup', bytes: bytes.slice(), fileName })
 }

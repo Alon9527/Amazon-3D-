@@ -4,6 +4,7 @@ import { parseGlb, type GlbChunk, type ParsedGlb } from '@core/glb/parser'
 import { repairMissingDefaultScene } from '@core/repair/sceneRepair'
 import { validateGltfBytes } from '@core/validator/gltfValidator'
 import { validateSceneRules } from '@core/validator/sceneRules'
+import { planWarningCleanup } from '@core/repair/warningCleanup'
 
 function fixedFileName(fileName: string): string {
   return fileName.toLowerCase().endsWith('.glb')
@@ -49,6 +50,7 @@ export async function analyzeGlbBytes(
 ): Promise<ModelAnalysis> {
   const parsed = parseGlb(source)
   const [gltfValidation] = await Promise.all([validateGltfBytes(source, fileName)])
+  const cleanupPlan = planWarningCleanup(parsed, gltfValidation.issues)
   return {
     file: {
       name: fileName,
@@ -58,6 +60,7 @@ export async function analyzeGlbBytes(
     stats: analyzeGltfJson(parsed.json),
     gltfValidation,
     amazonIssues: validateSceneRules(parsed.json),
+    cleanupPlan,
   }
 }
 
@@ -82,6 +85,7 @@ export async function createVerifiedSceneRepair(
   )
 
   return {
+    kind: 'scene',
     fixedBytes,
     before,
     after,

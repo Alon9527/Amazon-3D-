@@ -1,6 +1,7 @@
 /// <reference lib="webworker" />
 
 import { analyzeGlbBytes, createVerifiedSceneRepair } from '@core/validator/analysisPipeline'
+import { createVerifiedWarningCleanup } from '@core/validator/warningCleanupPipeline'
 import type { AnalysisWorkerRequest, AnalysisWorkerResponse } from '@shared/bridge'
 
 self.onmessage = async (event: MessageEvent<AnalysisWorkerRequest>) => {
@@ -13,6 +14,12 @@ self.onmessage = async (event: MessageEvent<AnalysisWorkerRequest>) => {
       return
     }
 
+    if (request.type === 'cleanup') {
+      const result = await createVerifiedWarningCleanup(request.bytes, request.fileName)
+      const response: AnalysisWorkerResponse = { id: request.id, ok: true, type: 'cleanup', result }
+      self.postMessage(response)
+      return
+    }
     const result = await createVerifiedSceneRepair(request.bytes, request.fileName)
     const response: AnalysisWorkerResponse = { id: request.id, ok: true, type: 'repair', result }
     self.postMessage(response)

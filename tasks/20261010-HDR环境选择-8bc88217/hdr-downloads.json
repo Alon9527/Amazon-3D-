@@ -1,0 +1,42 @@
+[
+  {
+    "id": "studio_small_08",
+    "source": "https://polyhaven.com/a/studio_small_08",
+    "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_08_1k.hdr",
+    "license": "CC0-1.0",
+    "bytes": 1508872,
+    "sha256": "f6a989f89432eb4eee3191364a9c1ceed195c4ec3544173a3c04fd96cb91d0ba"
+  },
+  {
+    "id": "studio_small_09",
+    "source": "https://polyhaven.com/a/studio_small_09",
+    "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_09_1k.hdr",
+    "license": "CC0-1.0",
+    "bytes": 1615248,
+    "sha256": "e7cfda5f4e98e623db12b8bfd0184e048488e4855d9c83e2751fb44a32e80c45"
+  },
+  {
+    "id": "studio_small_03",
+    "source": "https://polyhaven.com/a/studio_small_03",
+    "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_03_1k.hdr",
+    "license": "CC0-1.0",
+    "bytes": 1686299,
+    "sha256": "30933d55e45f0795daf49f3cbefbe0e5ebcb821ee04fb0a2818c02ffc3938817"
+  },
+  {
+    "id": "small_empty_room_1",
+    "source": "https://polyhaven.com/a/small_empty_room_1",
+    "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/small_empty_room_1_1k.hdr",
+    "license": "CC0-1.0",
+    "bytes": 1548604,
+    "sha256": "b3e042c4a650370c383699f61f65fcca4f037af32660994dafa61fbb257a4b52"
+  },
+  {
+    "id": "overcast_soil_puresky",
+    "source": "https://polyhaven.com/a/overcast_soil_puresky",
+    "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/overcast_soil_puresky_1k.hdr",
+    "license": "CC0-1.0",
+    "bytes": 1195816,
+    "sha256": "2dbbbbb1323a8e8989db2e8306bd13099b215539e5adba41b85738a250a7904e"
+  }
+]

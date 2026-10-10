@@ -3,7 +3,8 @@ import { existsSync } from 'node:fs'
 import { readFile, stat, writeFile } from 'node:fs/promises'
 import { basename, dirname, extname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import type { AssetPayload, SaveFixedRequest, SaveFixedResult } from '@shared/bridge'
+import type { AssetPayload, HdrPayload, SaveFixedRequest, SaveFixedResult } from '@shared/bridge'
+import { inspectHdrHeader, MAX_HDR_BYTES } from '@core/geometry/hdrHeader'
 
 const currentDirectory = dirname(fileURLToPath(import.meta.url))
 const isDevelopment = Boolean(process.env.ELECTRON_RENDERER_URL)
@@ -43,6 +44,25 @@ function samePath(left: string, right: string): boolean {
 }
 
 function registerIpc(): void {
+  ipcMain.handle('inspector:open-hdr', async (event): Promise<HdrPayload | null> => {
+    const owner = BrowserWindow.fromWebContents(event.sender)
+    const options = {
+      title: '加载本地 HDR 环境（不上传）',
+      properties: ['openFile' as const],
+      filters: [{ name: 'Radiance HDR', extensions: ['hdr'] }],
+    }
+    const result = owner ? await dialog.showOpenDialog(owner, options) : await dialog.showOpenDialog(options)
+    if (result.canceled || !result.filePaths[0]) return null
+    const filePath = result.filePaths[0]
+    if (extname(filePath).toLowerCase() !== '.hdr') throw new Error('请选择 .hdr 文件；暂不支持 EXR。')
+    const details = await stat(filePath)
+    if (!details.isFile()) throw new Error('选择的 HDR 路径不是文件。')
+    if (details.size > MAX_HDR_BYTES) throw new Error('HDR 文件超过 32 MB，请使用较低分辨率版本。')
+    const bytes = new Uint8Array(await readFile(filePath))
+    inspectHdrHeader(bytes)
+    return { name: basename(filePath), bytes }
+  })
+
   ipcMain.handle('inspector:open-glb', async (): Promise<AssetPayload | null> => {
     const result = await dialog.showOpenDialog({
       title: '打开 GLB',
@@ -81,7 +101,13 @@ function registerIpc(): void {
         throw new Error('不能覆盖原始 GLB，请选择新的文件名。')
       }
 
-      await writeFile(result.filePath, request.bytes)
+      // Exclusive creation also protects originals reachable through a hard link or symlink.
+      try {
+        await writeFile(result.filePath, request.bytes, { flag: 'wx' })
+      } catch (error) {
+        if (error && typeof error === 'object' && 'code' in error && error.code === 'EEXIST') throw new Error('目标文件已存在，不覆盖已有文件；请选择新的文件名。', { cause: error })
+        throw error
+      }
       const written = await readFile(result.filePath)
       if (!written.equals(Buffer.from(request.bytes))) {
         throw new Error('导出复检失败：保存的字节与已验证候选不一致')

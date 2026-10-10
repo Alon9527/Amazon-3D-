@@ -5,6 +5,8 @@ installed-test/
 coverage/
 test-results/
 playwright-report/
+tasks/**/output/
+tasks/**/scratch/
 *.log
 *.tsbuildinfo
 .DS_Store

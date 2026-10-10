@@ -89,6 +89,29 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
 .viewport-column { min-width: 0; min-height: 0; display: grid; grid-template-rows: minmax(0, 1fr) 43px; background: var(--canvas); }
 .viewport-shell { position: relative; min-width: 0; min-height: 0; overflow: hidden; background: var(--canvas); }
 .viewport-shell canvas { display: block; }
+.lighting-panel { position: absolute; z-index: 5; top: 24px; right: 24px; width: 176px; border: 1px solid #394044; background: rgba(18,22,24,.96); box-shadow: 0 6px 22px #0005; }
+.lighting-panel--expanded { width: 272px; max-height: calc(100% - 48px); overflow: auto; }
+.lighting-panel__toggle { display: flex; width: 100%; justify-content: space-between; align-items: center; padding: 11px 12px; border: 0; color: var(--text); background: transparent; cursor: pointer; font-size: 11px; }
+.lighting-panel__indicator { color: var(--amazon); font: 500 10px Bahnschrift, sans-serif; }
+.lighting-panel__body { padding: 0 12px 12px; border-top: 1px solid var(--line); }
+.lighting-field { display: grid; gap: 6px; padding-top: 12px; color: var(--muted); font-size: 10px; }
+.lighting-field select { width: 100%; min-width: 0; height: 32px; padding: 0 5px; color: var(--text); border: 1px solid #394044; background: #0f1213; font-size: 11px; }
+.lighting-description { color: var(--muted); line-height: 1.6; margin: 7px 0 10px; font-size: 10px; }
+.lighting-import, .lighting-reset { width: 100%; padding: 7px; border: 1px solid #424747; background: #202629; color: var(--text); font-size: 11px; cursor: pointer; }
+.lighting-import:hover, .lighting-reset:hover { border-color: var(--amazon); }
+.lighting-import:disabled { opacity: .5; cursor: wait; }
+.lighting-limit, .lighting-credit { display: block; margin-top: 6px; color: var(--faint); font-size: 9px; }
+.lighting-divider { border-top: 1px solid var(--line); margin: 12px 0; }
+.lighting-slider { display: grid; gap: 5px; margin-bottom: 11px; font-size: 11px; color: var(--muted); }
+.lighting-slider span { display: flex; justify-content: space-between; }
+.lighting-slider output { color: var(--text); font-family: Bahnschrift, sans-serif; }
+.lighting-slider input { width: 100%; margin: 0; accent-color: var(--amazon); cursor: pointer; }
+.lighting-background { display: flex; align-items: center; gap: 7px; font-size: 10px; color: var(--muted); }
+.lighting-background input { margin: 0; accent-color: var(--amazon); }
+.lighting-status { font-size: 10px; color: #89bd9b; line-height: 1.6; overflow-wrap: anywhere; }
+.lighting-error { font-size: 10px; color: #ffb66b; line-height: 1.6; overflow-wrap: anywhere; }
+.lighting-reset { color: var(--amazon); background: #29251c; border-color: #514532; }
+.lighting-note { font-size: 9px; color: var(--muted); line-height: 1.6; margin: 9px 0 0; }
 .measure-corner { position: absolute; z-index: 2; width: 22px; height: 22px; pointer-events: none; opacity: .55; }
 .measure-corner--tl { top: 14px; left: 14px; border-top: 1px solid var(--amazon); border-left: 1px solid var(--amazon); }
 .measure-corner--tr { top: 14px; right: 14px; border-top: 1px solid var(--amazon); border-right: 1px solid var(--amazon); }
@@ -167,3 +190,12 @@ code { font-family: Consolas, monospace; }
   .compatibility-rail > div { min-width: 86px; }
   .topbar { grid-template-columns: minmax(300px, 1fr) auto minmax(370px, 1fr); gap: 10px; }
 }
+.cleanup-reason { color: #b4c8b7; }
+.cleanup-records { margin: 8px 0; font-size: 11px; overflow-wrap: anywhere; }
+.cleanup-records summary { cursor: pointer; color: #ffb547; }
+.cleanup-records > div { padding-top: 10px; border-top: 1px solid #30363a; margin-top: 8px; }
+.cleanup-records p { margin: 4px 0; color: #8795a3; }
+.export-confirm-overlay { position: fixed; inset: 0; z-index: 100; background: #0009; display: grid; place-items: center; }
+.export-confirm { width: 460px; max-width: 90vw; background: #161b1f; padding: 24px; border: 1px solid #465059; box-shadow: 0 20px 80px #0008; }
+.export-confirm p { color: #b2bec6; font-size: 13px; line-height: 1.8; }
+.export-confirm button { margin: 12px 8px 0 0; }

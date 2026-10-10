@@ -24,6 +24,7 @@
     "src/core/**/*.ts",
     "src/config/**/*.ts",
     "src/shared/**/*.ts",
+    "src/renderer/store/inspectorStore.ts",
     "tests/**/*.ts"
   ]
 }

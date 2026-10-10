@@ -88,6 +88,38 @@ export interface ModelAnalysis {
   stats: ModelStats
   gltfValidation: GltfValidationSummary
   amazonIssues: import('./types').ValidationIssue[]
+  cleanupPlan?: WarningCleanupPlan
+}
+
+export interface WarningCleanupItem {
+  issueId: string
+  pointer: string
+  kind: 'uv' | 'image' | 'other'
+  status: 'eligible' | 'fixed' | 'skipped'
+  message: string
+}
+
+export interface WarningCleanupPlan {
+  items: WarningCleanupItem[]
+  fixableCount: number
+}
+
+export interface VerifiedWarningCleanup {
+  kind: 'warning-cleanup'
+  fixedBytes: Uint8Array
+  before: ModelAnalysis
+  after: ModelAnalysis
+  items: WarningCleanupItem[]
+  changedImageCount: number
+  checks: {
+    geometryBytesIdentical: boolean
+    imagePayloadsIdentical: boolean
+    materialJsonIdentical: boolean
+    geometryStatsIdentical: boolean
+    gltfErrorFree: boolean
+    targetsResolved: boolean
+    coreChecksPassed: boolean
+  }
 }
 
 export interface RepairChecks {
@@ -99,6 +131,7 @@ export interface RepairChecks {
 }
 
 export interface VerifiedSceneRepair {
+  kind: 'scene'
   fixedBytes: Uint8Array
   before: ModelAnalysis
   after: ModelAnalysis

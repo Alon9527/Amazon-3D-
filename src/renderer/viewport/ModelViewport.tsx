@@ -19,6 +19,8 @@ import {
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { metresToUnit } from '@core/units/convert'
 import { summarizeSceneTextures, type TextureLoadSummary } from '@core/geometry/modelTextures'
+import { LightingPanel } from '../components/LightingPanel'
+import { HdrEnvironment } from './HdrEnvironment'
 import type { ModelAnalysis, Unit, WorldBounds } from '@shared/analysis'
 import type { DisplaySettings } from '../store/inspectorStore'
 import { disposeScene, loadSceneFromGlb } from './modelLoader'
@@ -276,11 +278,7 @@ export function ModelViewport(props: ModelViewportProps) {
       <div className="measure-corner measure-corner--bl" />
       <div className="measure-corner measure-corner--br" />
       <Canvas camera={{ fov: 42, position: [1.4, 1, 1.4], near: 0.001, far: 1000 }} dpr={[1, 2]}>
-        <color attach="background" args={['#101315']} />
-        <ambientLight intensity={0.55} />
-        <hemisphereLight args={['#dfe8ee', '#25282a', 1.35]} />
-        <directionalLight position={[4, 7, 5]} intensity={2.4} />
-        <directionalLight position={[-4, 2, -3]} intensity={0.8} />
+        <HdrEnvironment />
         {bytes && (
           <LoadedModel
             bytes={bytes}
@@ -293,6 +291,7 @@ export function ModelViewport(props: ModelViewportProps) {
         <SceneHelpers bounds={bounds} display={display} unit={unit} />
         <CameraControls bounds={bounds} request={viewRequest} />
       </Canvas>
+      <LightingPanel />
 
       {!bytes && (
         <div className="viewport-empty">
